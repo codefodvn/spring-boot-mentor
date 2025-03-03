@@ -14,5 +14,6 @@ public class UserService {
 
     public void getAllUsers() {
         userRepository.findAll();
+        userRepository.getAllUser();
     }
 }

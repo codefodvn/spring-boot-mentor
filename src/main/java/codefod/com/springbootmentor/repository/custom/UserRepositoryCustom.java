@@ -4,4 +4,6 @@ import codefod.com.springbootmentor.entity.User;
 
 public interface UserRepositoryCustom {
 	public User getAllUser();
+
+	User getUserById(Long id);
 }
