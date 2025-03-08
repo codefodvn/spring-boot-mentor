@@ -1,5 +1,7 @@
 package codefod.com.springbootmentor.config.security.config;
 
+import codefod.com.springbootmentor.config.security.filter.JWTAuthenticationFilter;
+import codefod.com.springbootmentor.service.JWTService;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
@@ -22,6 +26,8 @@ public class SecurityConfig {
 
     private final InternalAuthEntryPoint internalAuthEntryPoint;
     private final AuthenticationProvider authenticationProvider;
+    private final JWTService jwtService;
+    private final UserDetailsService userDetailsService;
 
     private static final String[] AUTH_WHITELIST = {
             "/public/**",
@@ -59,6 +65,9 @@ public class SecurityConfig {
                         sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider);
+
+        http.addFilterBefore(new JWTAuthenticationFilter(jwtService, userDetailsService),
+                UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
