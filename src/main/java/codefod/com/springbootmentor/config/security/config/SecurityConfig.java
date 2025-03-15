@@ -22,7 +22,6 @@ public class SecurityConfig {
 
     private final InternalAuthEntryPoint internalAuthEntryPoint;
     private final AuthenticationProvider authenticationProvider;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     private static final String[] AUTH_WHITELIST = {
             "/public/**",
@@ -59,11 +58,7 @@ public class SecurityConfig {
                 .sessionManagement(
                         sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .oauth2Login(oauth2 -> {
-                    oauth2.loginPage("/auth/**").permitAll();
-                    oauth2.successHandler(oAuth2LoginSuccessHandler);
-                });
+                .authenticationProvider(authenticationProvider);
 
         return http.build();
     }
