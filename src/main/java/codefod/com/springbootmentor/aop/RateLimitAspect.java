@@ -1,6 +1,7 @@
 package codefod.com.springbootmentor.aop;
 
 import io.github.bucket4j.Bucket;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Aspect
 @Component
+@Slf4j
 public class RateLimitAspect {
 
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
@@ -33,6 +35,8 @@ public class RateLimitAspect {
         // Cấu hình bucket theo limit và period từ annotation
         int limit = codefodRateLimit.limit();
         int period = codefodRateLimit.period();
+
+        log.info("Joint point", joinPoint.getSignature().getName());
 
         // Tạo bucket với thời gian refresh và giới hạn request
         Bucket bucket = buckets.computeIfAbsent(key, k -> createBucket(limit, period));
